@@ -4,16 +4,19 @@ import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { execSync } from 'node:child_process'
-// DSH 的 API 客户端复用 qq-bridge 这份实现（它会自己铸造鉴权 Cookie）。
-// 想换位置就设环境变量 DSH_CLIENT_PATH 指向 dsh-client.js。
-const CLIENT_DIR = process.env.DSH_CLIENT_DIR || 'C:/Users/Administrator/Tools/qqbridge/qq-bridge-main/src'
-const { NodeApiClient } = await import('file:///' + CLIENT_DIR + '/dsh-client.js')
-let ratesAt = null
-try { ({ ratesAt } = await import('file:///' + CLIENT_DIR + '/model-prices.js')) } catch {}
 
 const HERE = path.dirname(fileURLToPath(import.meta.url))
 const ROOT = HERE
 const PORT = Number(process.env.LIVE_PORT || 7800)
+
+// DSH 的 API 客户端复用 qq-bridge 那份实现（它会自己铸造鉴权 Cookie）。
+// 位置：环境变量 DSH_CLIENT_DIR > 插件 config.json 的 clientDir > 默认路径。
+const CFG_PATH = path.join(HERE, '..', 'config.json')
+const CFG = (() => { try { return JSON.parse(fs.readFileSync(CFG_PATH, 'utf8')) } catch { return {} } })()
+const CLIENT_DIR = process.env.DSH_CLIENT_DIR || CFG.clientDir || 'C:/Users/Administrator/Tools/qqbridge/qq-bridge-main/src'
+const { NodeApiClient } = await import('file:///' + CLIENT_DIR + '/dsh-client.js')
+let ratesAt = null
+try { ({ ratesAt } = await import('file:///' + CLIENT_DIR + '/model-prices.js')) } catch {}
 
 /* ---------- 找 DSH 当前端口 ---------- */
 let found = { base: '', at: 0 }

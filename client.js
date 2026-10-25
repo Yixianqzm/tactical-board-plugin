@@ -64,6 +64,24 @@ window.__ModuleLoader__.load({
       const [on, setOn] = useEnabled()
       const [open, setOpen] = React.useState(false)
       const [warn, setWarn] = React.useState(false)
+      const [envs, setEnvs] = React.useState(null)
+      const [envMsg, setEnvMsg] = React.useState('')
+      const checkEnv = async () => {
+        setEnvMsg('检测中…')
+        try {
+          const r = await fetch('/api/neural-board/env', { cache: 'no-store' }).then((x) => x.json())
+          setEnvs(r.items || [])
+          setEnvMsg(r.ok ? '环境就绪' : '有缺项')
+        } catch (e) { setEnvMsg('检测失败：' + (e.message || e)) }
+      }
+      const fixEnv = async () => {
+        setEnvMsg('修复中…')
+        try {
+          const r = await fetch('/api/neural-board/fix', { method: 'POST' }).then((x) => x.json())
+          setEnvMsg((r.log || []).join(' · ') || '完成')
+          await checkEnv()
+        } catch (e) { setEnvMsg('修复失败：' + (e.message || e)) }
+      }
       return h('div', { style: { maxWidth: 900, padding: '2px 0 14px' } },
         h('div', { style: { marginBottom: 8 } },
           h('div', { style: { fontSize: 15, fontWeight: 600, marginBottom: 2 } }, '战术大屏'),
@@ -71,10 +89,19 @@ window.__ModuleLoader__.load({
             'NEURAL 星环：会话、token、轮次全部取本机 DSH 实时数据。入口走电脑默认浏览器，这里只做预览。')),
         h('div', { style: { display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10, flexWrap: 'wrap' } },
           h('button', { onClick: () => openExternal(EXTERNAL), style: Object.assign({}, btnStyle, { background: 'rgba(76,139,245,.18)' }) }, '在默认浏览器打开'),
+          h('button', { onClick: checkEnv, style: btnStyle }, '检测环境'),
+          h('button', { onClick: fixEnv, style: btnStyle }, '一键修复'),
+          envMsg ? h('span', { style: { fontSize: 11, opacity: .6 } }, envMsg) : null,
           h('button', { onClick: () => setOn(!on), style: btnStyle }, on ? '入口：已开' : '入口：已关'),
           h('span', { style: { fontSize: 11, opacity: .5 } }, '关掉之后顶栏那个按钮会收起来'),
           h('div', { style: { flex: 1 } }),
           h('button', { onClick: () => (open ? setOpen(false) : setWarn(true)), style: btnStyle }, open ? '收起预览' : '内嵌预览')),
+        envs ? h('div', {
+          style: { border: '1px solid var(--dsw-border,#333)', borderRadius: 10, padding: '8px 12px', marginBottom: 10, fontSize: 12, lineHeight: '20px' },
+        }, envs.map((it) => h('div', { key: it.key, style: { display: 'flex', gap: 8 } },
+          h('span', { style: { color: it.ok ? '#3ddc84' : '#ff7b54' } }, it.ok ? '●' : '○'),
+          h('span', { style: { minWidth: 110, opacity: .85 } }, it.name),
+          h('span', { style: { flex: 1, minWidth: 0, opacity: .55, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }, title: it.detail }, it.detail)))) : null,
         warn ? h('div', {
           style: {
             border: '1px solid rgba(255,176,32,.55)', background: 'rgba(255,176,32,.08)',
