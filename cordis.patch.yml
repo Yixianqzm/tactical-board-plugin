@@ -1,0 +1,5 @@
+# 战术大屏：DSH 插件挂载声明
+- insert:
+    - id: neural-board
+      name: dsh-neural-board
+      config: {}

@@ -1,0 +1,37 @@
+{
+  "name": "dsh-neural-board",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "战术大屏 · DSH 插件版：NEURAL 星环接本机 DSH 实时数据（改自抖音 @赛博老爸 的开源大屏）",
+  "main": "index.js",
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "board",
+    "README.md",
+    "LICENSE"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "inject": [
+        "@deepseek-ai/dsh-client-runtime",
+        "@deepseek-ai/dsh-client-ui-settings"
+      ]
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Yixianqzm/tactical-board-plugin.git"
+  }
+}
