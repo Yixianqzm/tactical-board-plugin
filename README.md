@@ -58,6 +58,7 @@ git clone <this-repo> dsh-neural-board
 
 ## 版本
 
+- **v0.1.1**：设置页补上出处与许可声明
 - **v0.1.0**：首个插件版。NEURAL 接真实数据（会话/token/轮次/思考时长）；默认浏览器入口 + 内嵌预览（带 token 提示）；顶栏快捷按钮；全屏。
 
 ## License

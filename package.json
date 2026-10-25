@@ -1,6 +1,6 @@
 {
   "name": "dsh-neural-board",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "type": "module",
   "description": "战术大屏 · DSH 插件版：NEURAL 星环接本机 DSH 实时数据（改自抖音 @赛博老爸 的开源大屏）",

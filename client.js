@@ -90,6 +90,9 @@ window.__ModuleLoader__.load({
             onClick: () => { setWarn(false); setOpen(true) },
             style: Object.assign({}, btnStyle, { background: 'rgba(255,176,32,.18)' }),
           }, '继续预览'))) : null,
+        h('div', { style: { fontSize: 11, opacity: .5, lineHeight: '17px', marginTop: 2 } },
+          '大屏本体来自抖音 @赛博老爸 开源的 agent-display（PolyForm Noncommercial 1.0.0，非商业使用）；',
+          '本插件只是把它接进 DSH，目前只适配 NEURAL 神经星环。'),
         open ? h('div', { style: { border: '1px solid var(--dsw-border,#333)', borderRadius: 10, overflow: 'hidden', height: 520 } },
           h('iframe', {
             src: EMBED, title: '战术大屏预览', allow: 'fullscreen',
